@@ -19,6 +19,8 @@ path_vis = "/media/kisna/data_1/image_fusion/image_fusion_dataset/OSU/1b/*"
 
 path_ir_list = glob.glob(path_ir, recursive=True)
 path_vis_list = glob.glob(path_vis, recursive=True)
+path_ir_list.sort()
+path_vis_list.sort()
 
 noOfFiles = len(path_ir_list)
 img_test = cv2.imread(path_ir_list[0],-1)
