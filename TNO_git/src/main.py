@@ -1,18 +1,16 @@
 import cv2
+import numpy as np
+import os
+import glob
 
+path_1a = "/media/kisna/data_1/image_fusion/image_fusion_dataset/OSU/1a/*"
+path_1b = "/media/kisna/data_1/image_fusion/image_fusion_dataset/OSU/1b/*"
 
-filename = r'./images/IR_18rad.bmp'
+path_1a_list = glob.glob(path_1a, recursive=True)
+path_1b_list = glob.glob(path_1b, recursive=True)
 
-img_grayscale = cv2.imread(filename,0) 
+noOfFiles = len(path_1a_list)
 
-# The function cv2.imshow() is used to display an image in a window.
-
-cv2.imshow('graycsale image',img_grayscale)
-
-# waitKey() waits for a key press to close the window and 0 specifies indefinite loop
-
-cv2.waitKey(0)
-
-# cv2.destroyAllWindows() simply destroys all the windows we created.
-
-cv2.destroyAllWindows()
+for fileNo in range(noOfFiles):
+    print(path_1a_list[fileNo])
+    print(path_1b_list[fileNo])        
