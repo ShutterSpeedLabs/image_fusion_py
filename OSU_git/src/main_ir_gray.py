@@ -93,8 +93,10 @@ for fileNo in range(noOfFiles):
     img_vis_lo = applykernel(img_vis_y[:,:,0])
     for i in range(img_height):
         for j in range(img_width):
-            alpha1 = max((img_ir_hi[i,j]+img_ir_lo[i,j]),0)
-            alpha2 = max((img_ir_hi[i,j]+img_ir_lo[i,j]+img_vis_hi[i,j]+img_vis_lo[i,j]+1),1)
+            # alpha1 = max((img_ir_hi[i,j]+img_ir_lo[i,j]),0)
+            # alpha2 = max((img_ir_hi[i,j]+img_ir_lo[i,j]+img_vis_hi[i,j]+img_vis_lo[i,j]+1),1)
+            alpha1 = max(abs(img_ir_hi[i,j]+img_ir_lo[i,j]),0)
+            alpha2 = max(abs(img_ir_hi[i,j]+img_ir_lo[i,j]+img_vis_hi[i,j]+img_vis_lo[i,j]+1),1)
             alpha = alpha1/alpha2
             beta = 1-alpha
             fused_image[i,j,0] = alpha*img_ir[i,j] + beta*img_vis_y[i,j,0]
