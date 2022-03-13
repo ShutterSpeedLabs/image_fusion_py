@@ -3,7 +3,7 @@ import numpy as np
 import os
 import glob
 
-h_down = 80
+h_down = 40
 
 
    
@@ -25,26 +25,29 @@ def framesCombineText(img_irIn,img_visIn,img_fusedIn):
 
     font = cv2.FONT_HERSHEY_SIMPLEX         # font
     fontScale = 0.5          # fontScale
-    color = (255, 255, 0)     # Red color in BGR
+    color = (0, 255, 0)     # Red color in BGR
     thickness = 1           # Line thickness of 2 px
 
     text = "Infrared"
-    org = (180, 40)         # org
+    org = (120, 20)         # org
     imgComb = cv2.putText(imgComb, text, org, font, fontScale, color, thickness, cv2.LINE_AA, False)
 
     text = "Visible"
-    org = (400, 40)         # org
+    org = (440, 20)         # org
     imgComb = cv2.putText(imgComb, text, org, font, fontScale, color, thickness, cv2.LINE_AA, False)
 
     text = "Fused"
-    org = (720, 40)         # org
+    org = (760, 20)         # org
     imgComb = cv2.putText(imgComb, text, org, font, fontScale, color, thickness, cv2.LINE_AA, False)
 
-    imgComb[h_down-1:-1,0:img_width,:] = img_ir
-    imgComb[h_down-1:-1,img_width:2*img_width,:] = img_vis
-    imgComb[h_down-1:-1,2*img_width:3*img_width,:] = imgrgb 
+    # imgComb[h_down-1:-1,0:img_width,:] = img_irIn
+    # imgComb[h_down-1:-1,img_width:2*img_width,:] = img_visIn
+    # imgComb[h_down-1:-1,2*img_width:3*img_width,:] = img_fusedIn 
+    img_t = np.concatenate((img_irIn, img_visIn), axis=1)
 
-    return imgComb
+    comImg = np.concatenate((img_t, img_fusedIn), axis=1)
+
+    return comImg
 
 
 path_ir = "/media/kisna/data_1/image_fusion/image_fusion_dataset/OSU/1a/*"
@@ -55,7 +58,9 @@ path_vis_list = glob.glob(path_vis, recursive=True)
 path_ir_list.sort()
 path_vis_list.sort()
 
-noOfFiles = len(path_ir_list)
+# noOfFiles = len(path_ir_list)
+noOfFiles = 30
+
 img_test = cv2.imread(path_ir_list[0],-1)
 # cv2.imshow('graycsale image',img_test[:,:,1])
 # cv2.imshow('graycsale image',img_test)
@@ -68,11 +73,18 @@ channels = img_test.shape[2]
 fused_image = np.zeros((img_height,img_width,3), np.uint8)
 fused_video = np.zeros((img_height+h_down,img_width*3,3,noOfFiles), np.uint8)
 
+w = img_height*3
+h = img_height + +h_down
+fps = 20
+# writer = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (w,h))
+# writer = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), fps, (w,h))
+writer = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), fps, (w,h))
+
 
 print("image height is: ", img_height)
 print("Image width is:", img_width)
 print("Number of channels are: ", channels)
-i=0
+idx=0
 for fileNo in range(noOfFiles):
     print(path_ir_list[fileNo])
     print(path_vis_list[fileNo]) 
@@ -93,7 +105,16 @@ for fileNo in range(noOfFiles):
             fused_image[i,j,1] = img_vis_y[i,j,1]
             fused_image[i,j,2] = img_vis_y[i,j,2]
     imgrgb = cv2.cvtColor(fused_image, cv2.COLOR_YUV2RGB)    
-    fused_video[:,:,:,i] = framesCombineText(img_ir,img_vis,imgrgb)
-    cv2.imshow('graycsale image',fused_video[:,:,:,i])
-    cv2.waitKey(2)
-    i = i+1
+    image_n = framesCombineText(img_ir,img_vis,imgrgb)
+    # fused_video[:,:,:,idx] = framesCombineText(img_ir,img_vis,imgrgb)
+    # fused_video[:,:,:,idx] =  image_n
+    # image_n = cv2.cvtColor(image_n, cv2.COLOR_RGB2BGR)
+
+    writer.write(image_n)    
+    # cv2.imshow('graycsale image',image_n) 
+    # cv2.waitKey(2)
+    # cv2.imshow('graycsale image',fused_video[:,:,:,i])
+    # cv2.waitKey(2)
+    idx = idx+1
+
+writer.release()
