@@ -45,8 +45,8 @@ def framesCombineText(img_irIn,img_visIn,img_fusedIn):
     return imgComb
 
 
-path_ir = "/media/kisna/data_1/image_fusion/image_fusion_dataset/OSU/1a/*"
-path_vis = "/media/kisna/data_1/image_fusion/image_fusion_dataset/OSU/1b/*"
+path_ir = "/media/kisna/data_1/image_fusion/image_fusion_dataset/OSU/5a/*"
+path_vis = "/media/kisna/data_1/image_fusion/image_fusion_dataset/OSU/5b/*"
 
 path_ir_list = glob.glob(path_ir, recursive=True)
 path_vis_list = glob.glob(path_vis, recursive=True)
@@ -70,7 +70,7 @@ fused_video = np.zeros((img_height+h_down,img_width*3,3,noOfFiles), np.uint8)
 
 w = img_width * 3
 h = img_height + h_down
-fps = 20
+fps = 25
 # writer = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (w,h))
 writer = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), fps, (w,h))
 
